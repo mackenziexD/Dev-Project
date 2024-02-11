@@ -2,8 +2,8 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
-from attendance.serializers import UserSerializer, GroupSerializer, UserProfileSerializer, UniversitySerializer, CourseSerializer, ClassSerializer, AttendanceRecordSerializer, CustomTokenObtainPairSerializer
-from attendance.models import UserProfile, University, Course, Class, AttendanceRecord
+from attendance.serializers import UserSerializer, GroupSerializer, UniversitySerializer, CourseSerializer, ClassSerializer, AttendanceRecordSerializer, CustomTokenObtainPairSerializer
+from attendance.models import University, Course, Class, AttendanceRecord
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -11,7 +11,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
@@ -19,15 +19,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-class UserProfileViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows user profiles to be viewed or edited.
-    """
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
 
 class UniversityViewSet(viewsets.ModelViewSet):
     """
@@ -35,7 +27,7 @@ class UniversityViewSet(viewsets.ModelViewSet):
     """
     queryset = University.objects.all()
     serializer_class = UniversitySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
 
 class CourseViewSet(viewsets.ModelViewSet):
     """
@@ -43,7 +35,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
 
 class ClassViewSet(viewsets.ModelViewSet):
     """
@@ -51,15 +43,25 @@ class ClassViewSet(viewsets.ModelViewSet):
     """
     queryset = Class.objects.all()
     serializer_class = ClassSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
 
 class AttendanceRecordViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows attendance records to be viewed or edited.
     """
-    queryset = AttendanceRecord.objects.all()
     serializer_class = AttendanceRecordSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        This view returns a list of all attendance records for staff users,
+        or just the attendance records associated with the currently authenticated user if they are not staff.
+        """
+        user = self.request.user
+        if user.is_staff:
+            return AttendanceRecord.objects.all().order_by('student__username')
+        else:
+            return AttendanceRecord.objects.filter(student=user).order_by('student__username')
 
 class CustomTokenObtainPairView(TokenObtainPairView):
         serializer_class = CustomTokenObtainPairSerializer

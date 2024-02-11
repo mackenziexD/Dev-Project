@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from .models import UserProfile, University, Course, Class, AttendanceRecord
+from .models import University, Course, Class, AttendanceRecord
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -13,11 +13,6 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
         fields = ['url', 'name']
-
-class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = '__all__'
 
 class UniversitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

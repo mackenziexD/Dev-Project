@@ -8,11 +8,10 @@ from rest_framework_simplejwt import views as jwt_views
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
-router.register(r'userprofiles', views.UserProfileViewSet)
 router.register(r'universities', views.UniversityViewSet)
 router.register(r'courses', views.CourseViewSet)
 router.register(r'classes', views.ClassViewSet)
-router.register(r'attendancerecords', views.AttendanceRecordViewSet)
+router.register(r'attendancerecords', views.AttendanceRecordViewSet, basename='attendancerecord')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
