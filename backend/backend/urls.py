@@ -19,5 +19,5 @@ urlpatterns = [
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path("api/token/", views.CustomTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", jwt_views.TokenRefreshView.as_view(), name="token_refresh"),
-    path("logout/blacklist/", views.BlacklistTokenView.as_view(), name="blacklist"),
+    path("api/token/blacklist/", jwt_views.TokenBlacklistView.as_view(), name="token_blacklist"),
 ]

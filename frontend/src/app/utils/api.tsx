@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: 'http://localhost:3000/api/',
+  baseURL: 'http://localhost:8000/api/',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -28,13 +28,13 @@ api.interceptors.request.use(
       return Promise.reject(error);
     }
 
-    if(error.response.status === 401 && originalRequest.url === 'http://localhost:3000/api/auth/refresh') {
+    if(error.response.status === 401 && originalRequest.url === 'http://localhost:3000/api/token/refresh') {
       window.location.href = '/login/';
       return Promise.reject(error);
     }
 
     if (error.responce.data.code === 'token_not_valid' && error.responce.status === 401 && error.responce.statusText === 'Unauthorised'){
-      const refreshToken = localStorage.getItem('refresh_token');
+      const refreshToken = localStorage.getItem('refreshToken');
 
       if(refreshToken){
         const tokenParts = JSON.parse(atob(refreshToken.split('.')[1]));
@@ -43,10 +43,10 @@ api.interceptors.request.use(
         console.log(tokenParts.exp);
 
         if(tokenParts.exp > now){
-          return api.post('/auth/refresh', {refresh: refreshToken})
+          return api.post('/token/refresh', {refresh: refreshToken})
           .then((responce) => {
-            localStorage.setItem('access_token', responce.data.access);
-            localStorage.setItem('refresh_token', responce.data.refresh);
+            localStorage.setItem('accessToken', responce.data.access);
+            localStorage.setItem('refreshToken', responce.data.refresh);
 
             // https://axios-http.com/docs/config_defaults
             api.defaults.headers['Authorization'] = 'Bearer ' + responce.data.access;

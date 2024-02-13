@@ -1,19 +1,20 @@
 import React, { useEffect } from 'react';
 import { api } from '../utils/api';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 export default function Logout() {
-    const navigate = useNavigate();
-    
-    useEffect(() => {
-        api.post('/auth/logout/', {
-            refresh_token: localStorage.getItem('refresh_token'),
+    const router = useRouter();
+
+    async function logout() {
+        const token = localStorage.getItem('refreshToken');
+        await api.post('token/blacklist/', { 
+            refresh: token 
         });
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         api.defaults.headers['Authorization'] = null;
-        navigate('/login');
-    });
+        router.push('/login');
+    }
     
-return <div>logout</div>;
+return <div onClick={logout}>logout</div>;
 }

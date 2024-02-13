@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-*5#_)f@qlo*mip-ehkv0q2%_-nsmnx%1w2o5f9ljcibjvpbac9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # JWT/API

@@ -20,10 +20,8 @@ export default function Login() {
     const password = target.password.value;
 
     try {
-      const response = await api.post('auth/login', {
-        username,
-        password,
-      });
+      const response = await api.post('token/', { username, password });
+
       const { access, refresh } = response.data;
       setTokens(access, refresh);
       setError(null);
