@@ -1,9 +1,21 @@
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import viewsets, permissions, response as Responce, status
+from rest_fromework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from attendance.serializers import UserSerializer, GroupSerializer, UniversitySerializer, CourseSerializer, ClassSerializer, AttendanceRecordSerializer, CustomTokenObtainPairSerializer
 from attendance.models import University, Course, Class, AttendanceRecord
+
+class BlacklistTokenView(viewsets.APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Responce(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Responce(status=status.HTTP_400_BAD_REQUEST)
 
 class UserViewSet(viewsets.ModelViewSet):
     """
