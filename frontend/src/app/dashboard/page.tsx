@@ -1,5 +1,9 @@
-'use client';
-import React from "react";
+"use client";
+
+import useSWR from "swr";
+import { fetcher } from "@/app/fetcher";
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from 'react-toastify';
 import Sidebar from "../components/sidebar";
 import {
     Table,
@@ -9,114 +13,106 @@ import {
     TableRow,
     TableCell
 } from "@nextui-org/react";
-import { useAuth } from "../authContext";
+import { useEffect } from "react";
 
-const DashboardPage = () => {
-    const { decodedToken } = useAuth();
-    return (
-        <>
-            <Sidebar />
-            <div className="p-4 sm:ml-64 bg-gray-200 dark:bg-black">
-                <div className="p-4 mt-14">
-                    <h1 className="text-2xl font-bold dark:text-white text-black">Dashboard</h1>
-                    <p className="text-gray-500 mb-4">
-                        Welcome, {decodedToken?.username}
-                    </p>
-                        {decodedToken?.is_staff ? 'Staff Member' : 'User'}
-                        <br />
-                        Groups Assigned
-                        <ul className="max-w-md list-disc list-inside">
-                            {decodedToken?.groups.map(group => group ? <li className="ms-3">{group}</li> : '')}
-                        </ul>
-                        <br />
+export default function Home() {
+  const router = useRouter();
 
-                    <div className="grid grid-cols-2 gap-4 mb-4">
+  const { data: currnetUser } = useSWR("/me", fetcher);
 
-                        <div className="overflow-hidden shadow-md">
-                            <div className="px-6 py-4 dark:bg-gray-800 dark:border-gray-600 bg-white border-b dark:text-gray-100 text-gray-700 text-black border-gray-200 font-bold uppercase">
-                                Last 10 Attended Lessons
-                            </div>
+  return (
+    <>
+        <Sidebar />
+        <div className="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
+            <h1 className="text-2xl font-bold dark:text-white text-black">Dashboard</h1>
+            <p className="text-gray-500 mb-4">
+                Welcome, {currnetUser?.username || "Loading..."}
+            </p>
 
-                            <div className="p-6 dark:bg-gray-800 dark:text-gray-200 text-gray-600 bg-white border-b border-gray-600">
-                                <Table aria-label="Example table with dynamic content">
-                                    <TableHeader>
-                                        <TableColumn>Date</TableColumn>
-                                        <TableColumn>Class Name</TableColumn>
-                                        <TableColumn>Checked In At</TableColumn>
-                                    </TableHeader>
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell>10/02/2024</TableCell>
-                                            <TableCell>John Doe</TableCell>
-                                            <TableCell>17:00</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>10/02/2024</TableCell>
-                                            <TableCell>Jane Doe</TableCell>
-                                            <TableCell>17:00</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>10/02/2024</TableCell>
-                                            <TableCell>John Smith</TableCell>
-                                            <TableCell>17:00</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>10/02/2024</TableCell>
-                                            <TableCell>John Smith</TableCell>
-                                            <TableCell>17:00</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>10/02/2024</TableCell>
-                                            <TableCell>John Smith</TableCell>
-                                            <TableCell>17:00</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>10/02/2024</TableCell>
-                                            <TableCell>John Smith</TableCell>
-                                            <TableCell>17:00</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>10/02/2024</TableCell>
-                                            <TableCell>John Smith</TableCell>
-                                            <TableCell>17:00</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>10/02/2024</TableCell>
-                                            <TableCell>John Smith</TableCell>
-                                            <TableCell>17:00</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>10/02/2024</TableCell>
-                                            <TableCell>John Smith</TableCell>
-                                            <TableCell>17:00</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>10/02/2024</TableCell>
-                                            <TableCell>John Smith</TableCell>
-                                            <TableCell>17:00</TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </div>
-                        </div>
-                
-                    
-                        <div className="overflow-hidden shadow-md">
-                            <div className="px-6 py-4 dark:bg-gray-800 dark:border-gray-600 bg-white border-b dark:text-gray-100 text-gray-700 text-black border-gray-200 font-bold uppercase">
-                                Last 10 Attended Lessons
-                            </div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
 
-                            <div className="p-6 dark:bg-gray-800 dark:text-gray-200 text-gray-600 bg-white border-b border-gray-600">
-                                
-                            </div>
-                        </div>
-
+                <div className="overflow-hidden shadow-md">
+                    <div className="px-6 py-4 dark:bg-gray-800 dark:border-gray-600 bg-white border-b dark:text-gray-100 text-gray-700 text-black border-gray-200 font-bold uppercase">
+                        Last 10 Attended Lessons
                     </div>
 
+                    <div className="p-6 dark:bg-gray-800 dark:text-gray-200 text-gray-600 bg-white border-b border-gray-600">
+                        <Table aria-label="Example table with dynamic content">
+                            <TableHeader>
+                                <TableColumn>Date</TableColumn>
+                                <TableColumn>Class Name</TableColumn>
+                                <TableColumn>Checked In At</TableColumn>
+                            </TableHeader>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>10/02/2024</TableCell>
+                                    <TableCell>John Doe</TableCell>
+                                    <TableCell>17:00</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>10/02/2024</TableCell>
+                                    <TableCell>Jane Doe</TableCell>
+                                    <TableCell>17:00</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>10/02/2024</TableCell>
+                                    <TableCell>John Smith</TableCell>
+                                    <TableCell>17:00</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>10/02/2024</TableCell>
+                                    <TableCell>John Smith</TableCell>
+                                    <TableCell>17:00</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>10/02/2024</TableCell>
+                                    <TableCell>John Smith</TableCell>
+                                    <TableCell>17:00</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>10/02/2024</TableCell>
+                                    <TableCell>John Smith</TableCell>
+                                    <TableCell>17:00</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>10/02/2024</TableCell>
+                                    <TableCell>John Smith</TableCell>
+                                    <TableCell>17:00</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>10/02/2024</TableCell>
+                                    <TableCell>John Smith</TableCell>
+                                    <TableCell>17:00</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>10/02/2024</TableCell>
+                                    <TableCell>John Smith</TableCell>
+                                    <TableCell>17:00</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>10/02/2024</TableCell>
+                                    <TableCell>John Smith</TableCell>
+                                    <TableCell>17:00</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </div>
                 </div>
-            </div>
-        </>
-    );
-};
+        
+            
+                <div className="overflow-hidden shadow-md">
+                    <div className="px-6 py-4 dark:bg-gray-800 dark:border-gray-600 bg-white border-b dark:text-gray-100 text-gray-700 text-black border-gray-200 font-bold uppercase">
+                        Last 10 Attended Lessons
+                    </div>
 
-export default DashboardPage;
+                    <div className="p-6 dark:bg-gray-800 dark:text-gray-200 text-gray-600 bg-white border-b border-gray-600">
+                        
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </>
+  );
+}

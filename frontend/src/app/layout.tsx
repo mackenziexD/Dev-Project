@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Providers } from "./providers";
-import { AuthProvider } from './authContext';
+import 'react-loading-skeleton/dist/skeleton.css';
+import PrelineScript from "./components/PrelineScript";
+import CookieConsent from "./components/CookieConsent";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+import ClientToastTrigger from './components/ClientToastTrigger';
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,13 +19,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.tailwindcss.css" />
+        <script src="./node_modules/preline/dist/preline.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossOrigin="anonymous"></script>
+      </head>
       <body>
-        <Providers>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
-        </Providers>
+          <CookieConsent />
+          {children}
+          <ToastContainer />
+          <ClientToastTrigger /> 
       </body>
+      <PrelineScript />
     </html>
   );
 }

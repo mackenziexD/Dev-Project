@@ -5,9 +5,18 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    groups = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
+        fields = ['url', 'username', 'email', 'groups', 'is_staff', 'is_active', 'id', 'first_name', 'last_name', 'is_superuser']
+        # Include any other fields you need
+
+    def get_groups(self, obj):
+        """
+        Returns a list of group names for the user.
+        """
+        return [group.name for group in obj.groups.all()]
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, permissions
+from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from attendance.serializers import UserSerializer, GroupSerializer, UniversitySerializer, CourseSerializer, ClassSerializer, AttendanceRecordSerializer, CustomTokenObtainPairSerializer
 from attendance.models import University, Course, Class, AttendanceRecord
@@ -12,6 +13,22 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
 
+class MeViewSet(viewsets.GenericViewSet):
+    """
+    API endpoint that allows the currently authenticated user to be viewed.
+    This will return username, email, groups, is_staff, is_active, and user_id.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        """
+        Override the default list method to return the current user's details,
+        including the request context for the serializer.
+        """
+        user = request.user
+        serializer = UserSerializer(user, context={'request': request})
+        return Response(serializer.data)
+    
 class GroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.

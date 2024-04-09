@@ -12,6 +12,7 @@ router.register(r'universities', views.UniversityViewSet)
 router.register(r'courses', views.CourseViewSet)
 router.register(r'classes', views.ClassViewSet)
 router.register(r'attendancerecords', views.AttendanceRecordViewSet, basename='attendancerecord')
+router.register(r'me', views.MeViewSet, basename='me')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
