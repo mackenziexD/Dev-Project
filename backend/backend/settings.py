@@ -86,6 +86,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://c0027816-devproject-react.azurewebsites.net/",
+    "https://c0027816-devproject-react.azurewebsites.net",
 ]
 
 MIDDLEWARE = [
