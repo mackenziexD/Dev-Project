@@ -10,9 +10,12 @@ on:
       - main
   workflow_dispatch:
 
-defaults:
-  run:
-    working-directory: ./backend
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
 
 jobs:
   build:
@@ -67,12 +70,12 @@ jobs:
           name: python-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
+        run: unzip python-app/release.zip -d ./
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
-        id: deploy-to-webapp
         with:
           app-name: 'c0027816-devproject-django'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C92AA3163B154865863CF235DF1E462C }}
+          package: ./release.zip
