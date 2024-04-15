@@ -10,12 +10,9 @@ on:
       - main
   workflow_dispatch:
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend
+defaults:
+  run:
+    working-directory: ./backend
 
 jobs:
   build:
