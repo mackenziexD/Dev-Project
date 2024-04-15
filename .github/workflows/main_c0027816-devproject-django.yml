@@ -54,6 +54,9 @@ jobs:
     - name: Unzip artifact for deployment
       run: unzip release -d ./
 
+    - name: list files to make sure release unzipped correctly
+      run: ls -R
+
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
