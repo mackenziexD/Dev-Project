@@ -39,7 +39,7 @@ LOGGING = {
     }
 }
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'c0027816-devproject-django.azurewebsites.net']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'c0027816-devproject-django.azurewebsites.net', '169.254.130.4']
 
 # JWT/API
 REST_FRAMEWORK = {
