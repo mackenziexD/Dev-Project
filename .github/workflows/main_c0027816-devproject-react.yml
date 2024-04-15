@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v2
         with:
-          node-version: '16.x' # It's recommended to use LTS version of Node.js
+          node-version: '20.x' # It's recommended to use LTS version of Node.js
 
       - name: Install dependencies
         run: npm install
