@@ -4,10 +4,10 @@
 name: Build and deploy Node.js to Azure - c0027816-devproject-react
 
 on:
-    push:
-        branches:
-            - main
-    workflow_dispatch:
+  push:
+      branches:
+          - main
+  workflow_dispatch:
     
 jobs:
     build:
