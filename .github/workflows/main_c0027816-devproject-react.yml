@@ -17,24 +17,31 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Node.js version
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
-          node-version: '20.x'
+          node-version: '16.x' # It's recommended to use LTS version of Node.js
 
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Build Next.js app
+        run: npm run build
+        working-directory: ./frontend
+
+      - name: Export Next.js static files
+        run: npm run export
+        working-directory: ./frontend
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: zip -r frontend.zip ./out
+        working-directory: ./frontend
 
-      - name: Upload artifact for deployment job
+      - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
         with:
-          name: node-app
-          path: release.zip
+          name: nextjs-app
+          path: frontend/frontend.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -42,21 +49,20 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: node-app
+          name: nextjs-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
+        run: unzip frontend.zip -d ./
       
       - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
+        id: deploy-to-webapp
         with:
-          app-name: 'c0027816-devproject-react'
+          app-name: 'c0027816-devproject-django'
           slot-name: 'Production'
-          package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_05DD5E63BDD24898B0D76B365E3487D6 }}
