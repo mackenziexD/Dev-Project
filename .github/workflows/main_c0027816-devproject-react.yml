@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
  
-name: Build and deploy Node.js app to Azure Web App - c0027816-devproject-react
+name: Build and deploy Node.js to Azure - c0027816-devproject-react
 
 on:
   push:
@@ -29,15 +29,12 @@ jobs:
         run: npm run build
         working-directory: ./frontend
 
-      - name: Zip artifact for deployment
-        run: zip -r frontend.zip ./out
-        working-directory: ./frontend
-
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
+        working-directory: ./frontend
         with:
           name: nextjs-app
-          path: frontend/frontend.zip
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -51,9 +48,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: nextjs-app
-
-      - name: Unzip artifact for deployment
-        run: unzip frontend.zip -d ./
       
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
