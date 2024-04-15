@@ -19,23 +19,21 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v2
         with:
-          node-version: '20.x' # It's recommended to use LTS version of Node.js
+          node-version: '20.x'
 
       - name: Install dependencies
         run: npm install
         working-directory: ./frontend
 
       - name: Build Next.js app
-        run: |
-          npm run build
-          mv .next/static .next/standalone/.next/static
+        run: npm run build
         working-directory: ./frontend
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
         with:
           name: node-app
-          path: ./frontend/.next
+          path: ./frontend/.next/standalone
 
   deploy:
     runs-on: ubuntu-latest
@@ -57,4 +55,4 @@ jobs:
           app-name: 'c0027816-devproject-react'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_05DD5E63BDD24898B0D76B365E3487D6 }}
-          package: ./frontend/.next/standalone 
+          package: .
