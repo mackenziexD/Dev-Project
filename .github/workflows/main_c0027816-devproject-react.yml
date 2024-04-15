@@ -27,8 +27,8 @@ jobs:
 
       - name: Build Next.js app
         run: |
-        npm run build
-        mv .next/static .next/standalone/.next/static
+          npm run build
+          mv .next/static .next/standalone/.next/static
         working-directory: ./frontend
 
       - name: Upload artifact for deployment jobs
