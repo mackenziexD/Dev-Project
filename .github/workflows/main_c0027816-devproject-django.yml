@@ -57,10 +57,10 @@ jobs:
     - name: list files to make sure release unzipped correctly
       run: ls -R
 
-    - name: Deploy to Azure Web App
+    - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
+      id: deploy-to-webapp
       with:
         app-name: 'c0027816-devproject-django'
         slot-name: 'Production'
         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C92AA3163B154865863CF235DF1E462C }}
-        package: ./release
