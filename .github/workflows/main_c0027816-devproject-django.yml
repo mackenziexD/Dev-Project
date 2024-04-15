@@ -44,11 +44,14 @@ jobs:
       - name: Check zip contents
         run: unzip -l release.zip
 
+      - name: List files in the working directory
+        run: ls -la
+
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
         with:
           name: python-app
-          path: release.zip
+          path: ./backend/release.zip
 
   deploy:
     runs-on: ubuntu-latest
