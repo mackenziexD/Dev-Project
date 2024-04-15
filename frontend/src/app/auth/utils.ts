@@ -4,7 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import { stringify } from "querystring";
 
 // Base API setup for making HTTP requests
-const api = wretch("http://localhost:8000").accept("application/json");
+const api = wretch("https://c0027816-devproject-django.azurewebsites.net").accept("application/json");
 
 /**
  * Stores a token in cookies.
