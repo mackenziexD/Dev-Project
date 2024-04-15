@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { AuthActions } from "@/app/auth/utils";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 type FormData = {
@@ -18,6 +18,7 @@ const Login = () => {
   } = useForm<FormData>();
 
   const router = useRouter();
+  const redirect = useSearchParams().get("redirect");
 
   const { login, storeToken, storeIsAdmin } = AuthActions();
 
@@ -27,8 +28,9 @@ const Login = () => {
         storeToken(json.access, "access");
         storeToken(json.refresh, "refresh");
         storeIsAdmin(json.access);
-
-        router.push("dashboard");
+        
+        const destination = redirect || "/dashboard"; // Fallback to dashboard if no redirect URL
+        router.push(destination.toString()); // Ensure destination is a string
       })
       .catch((err) => {
         setError("root", { type: "manual", message: err.json.detail });
@@ -89,8 +91,8 @@ const Login = () => {
           </div>
         </div>
         <div className="hidden bg-white lg:block lg:flex-1 lg:relative sm:contents">
-          <div className="absolute inset-0 object-cover w-full h-full bg-white" alt="" height="1866" width="1664">
-            <img className="object-cover object-center w-full h-auto bg-gray-200" src="https://windstatic.com/images/placeholders/square1.svg" alt="" width="1310" height="873" />
+          <div className="absolute inset-0 object-cover w-full h-full bg-white flex justify-center items-center" >
+            <img className="object-cover object-center w-full h-auto bg-gray-200" alt="aa" height="1866" width="1664" src="https://blog.cdn.cmarix.com/blog/wp-content/uploads/2022/05/Attendance-Management-System.png" alt="" width="1310" height="873" />
           </div>
         </div>
       </div>

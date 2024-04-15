@@ -40,10 +40,19 @@ const api = () => {
 };
 
 /**
- * Fetches data from the specified URL, automatically handling authentication and token refresh.
+ * GET, PUT, POST, DELETE data from the specified URL, automatically handling authentication and token refresh.
  * @returns {Promise<any>} The promise resolving to the fetched data.
  * @param url
  */
 export const fetcher = (url: string): Promise<any> => {
   return api().get(url).json();
+};
+export const putter = (url: string, data: any): Promise<any> => {
+  return api().url(url).put(data).json();
+};
+export const poster = (url: string, data: any): Promise<any> => {
+  return api().url(url).post(data).json();
+};
+export const deleter = (url: string): Promise<any> => {
+  return api().url(url).delete().res();
 };

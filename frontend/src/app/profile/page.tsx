@@ -4,20 +4,18 @@ import useSWR from "swr";
 import { fetcher } from "@/app/fetcher";
 import { useRouter } from "next/navigation";
 import Sidebar from "../components/sidebar";
-import {
-    Table,
-    TableHeader,
-    TableBody,
-    TableColumn,
-    TableRow,
-    TableCell
-} from "@nextui-org/react";
+import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
 
   const { data: user } = useSWR("/me", fetcher);
 
+  useEffect(() => {
+    if(user){
+        console.log(user);
+    }
+  }, [user]);
 
   return (
     <>
@@ -90,7 +88,7 @@ export default function Home() {
                                 </div>
 
                                 <div className="sm:col-span-9">
-                                    <input id="af-user-group" type="text" className="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-800 dark:text-gray-00 dark:focus:ring-gray-600" value={user?.groups} disabled/>
+                                    <input id="af-user-group" type="text" className="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-800 dark:text-gray-00 dark:focus:ring-gray-600" value={user?.group_names} disabled/>
                                 </div>
 
                             </div>

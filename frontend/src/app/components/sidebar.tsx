@@ -8,10 +8,11 @@ import { AuthActions } from "@/app/auth/utils";
 import Link from 'next/link';
 import SidebarLink from './SidebarLink';
 import UserProfile from './UserProfile';
+import { cookies } from 'next/headers'
 
 const Sidebar: React.FC = () => {
     const { data: user } = useSWR("/me", fetcher);
-  
+
     library.add(fas);
 
     return (
@@ -47,7 +48,7 @@ const Sidebar: React.FC = () => {
                 </div>
             </div>
 
-            <div id="application-sidebar" className="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform hidden fixed top-0 start-0 bottom-0 z-[60] w-64 bg-white border-e border-gray-200 pt-7 pb-10 overflow-y-auto lg:block lg:translate-x-0 lg:end-auto lg:bottom-0 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-slate-700 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500 dark:bg-gray-800 dark:border-gray-700">
+            <div id="application-sidebar" className="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform hidden fixed top-0 start-0 bottom-0 w-64 bg-white border-e border-gray-200 pt-7 pb-10 overflow-y-auto lg:block lg:translate-x-0 lg:end-auto lg:bottom-0 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-slate-700 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500 dark:bg-gray-800 dark:border-gray-700">
                 <div className="px-6">
                 <Link className="flex-none text-xl font-semibold dark:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="/dashboard" aria-label="Brand">Attendance Tracker</Link>
                 </div>
@@ -55,18 +56,27 @@ const Sidebar: React.FC = () => {
                 <nav className="hs-accordion-group p-6 w-full flex flex-col flex-wrap" data-hs-accordion-always-open>
                     <ul className="space-y-1.5 pt-3">
                         <SidebarLink href="/dashboard" icon="home">Dashboard</SidebarLink>
-                        <SidebarLink href="#" icon="calendar">Calendar</SidebarLink>
+                        <SidebarLink href="/calendar" icon="calendar">Calendar</SidebarLink>
                     </ul>
+                    {user?.is_staff && (
+                    <>
                     <p className="text-sm text-gray-500 mt-6 dark:text-gray-400">Staff</p>
                     <ul className="space-y-1.5 pt-3">
-                        <SidebarLink href="#" icon="users-cog">Users</SidebarLink>
-                        <SidebarLink href="/lessons" icon="chalkboard-teacher">Lessons</SidebarLink>
+                        <SidebarLink href="/staff/students" icon="users-cog">Students</SidebarLink>
+                        <SidebarLink href="/staff/lessons" icon="chalkboard-teacher">Lessons</SidebarLink>
+                        <SidebarLink href="/staff/courses" icon="lines-leaning">Courses</SidebarLink>
                     </ul>
+                    </>
+                    )}
+                    {user?.is_superuser && (
+                    <>
                     <p className="text-sm text-gray-500 mt-6 dark:text-gray-400">Administrator</p>
                     <ul className="space-y-1.5 pt-3">
-                        <SidebarLink href="/admin/all-users" icon="globe">Global Users</SidebarLink>
-                        <SidebarLink href="/admin/user-groups" icon="layer-group">User Groups</SidebarLink>
+                        <SidebarLink href="/admin/all-users" icon="user">All Users</SidebarLink>
+                        <SidebarLink href="/admin/user-groups" icon="layer-group">Groups</SidebarLink>
                     </ul>
+                    </>
+                    )}
                 </nav>
             </div>
         </>

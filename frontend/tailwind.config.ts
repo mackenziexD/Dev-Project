@@ -7,6 +7,8 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "node_modules/preline/dist/*.js",
+    "./node_modules/tailwind-datepicker-react/dist/**/*.js",
+    "./node_modules/flowbite-react/lib/**/*.js",
   ],
   theme: {
     extend: {
@@ -20,6 +22,7 @@ const config: Config = {
   darkMode: "class",
   plugins: [
     require('preline/plugin'),
+    require("flowbite/plugin"),
   ]
 };
 export default config;

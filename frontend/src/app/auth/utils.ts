@@ -16,7 +16,7 @@ const storeToken = (token: string, type: "access" | "refresh") => {
 };
 
 /**
- * Stores a boolean value if the user is an staff and admin.
+ * Stores a boolean value if the user is an staff and superuser.
  */
 const storeIsAdmin = (token: string) => {
   interface DecodedToken {
@@ -24,11 +24,13 @@ const storeIsAdmin = (token: string) => {
     email: string;
     groups: string[];
     is_staff: boolean;
+    is_superuser: boolean;
     is_active: boolean;
     user_id: number;
   }
   const decodedToken: DecodedToken = jwtDecode(token);
-  Cookies.set("isAdmin", String(decodedToken?.is_staff));
+  Cookies.set("isAdmin", String(decodedToken?.is_superuser));
+  Cookies.set("isStaff", String(decodedToken?.is_staff));
 }
 
 /**
@@ -46,6 +48,8 @@ const getToken = (type: string) => {
 const removeTokens = () => {
   Cookies.remove("accessToken");
   Cookies.remove("refreshToken");
+  Cookies.remove("isAdmin");
+  Cookies.remove("isStaff");
 };
 
 /**

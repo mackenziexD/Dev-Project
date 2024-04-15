@@ -1,44 +1,70 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from .models import University, Course, Class, AttendanceRecord
+from .models import Course, Class, AttendanceRecord
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    groups = serializers.SerializerMethodField()
+    groups = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), many=True, required=False)
+    group_names = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups', 'is_staff', 'is_active', 'id', 'first_name', 'last_name', 'is_superuser']
-        # Include any other fields you need
+        fields = ['url', 'username', 'email', 'groups', 'group_names', 'is_staff', 'is_active', 'id', 'first_name', 'last_name', 'is_superuser']
 
-    def get_groups(self, obj):
-        """
-        Returns a list of group names for the user.
-        """
+    def get_group_names(self, obj):
+        """Returns a list of group names for the user."""
         return [group.name for group in obj.groups.all()]
+    
+    def create(self, validated_data):
+        groups_data = validated_data.pop('groups', None)
+        user = User.objects.create(**validated_data)
+        if groups_data:
+            user.groups.set(groups_data)
+        user.save()
+        return user
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
-        fields = ['url', 'name']
+        fields = ['url', 'name', 'id']
 
-class UniversitySerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = University
-        fields = '__all__'
+class CourseSerializer(serializers.ModelSerializer):
+    university_name = serializers.SerializerMethodField()
 
-class CourseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
 
-class ClassSerializer(serializers.HyperlinkedModelSerializer):
+    def get_university_name(self, obj):
+        return obj.university.name
+
+class ClassSerializer(serializers.ModelSerializer):
+    students = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True)
+    students_names = serializers.SerializerMethodField()
+    teacher = serializers.StringRelatedField()
+    course_name = serializers.CharField(source='course.name', read_only=True)
+    students_attendance = serializers.SerializerMethodField()
+    
     class Meta:
         model = Class
-        fields = '__all__'
+        fields = ['id', 'course', 'course_name', 'teacher', 'students', 'students_names', 'university', 'schedule', 'students_attendance']
 
-class AttendanceRecordSerializer(serializers.HyperlinkedModelSerializer):
+    def get_students_names(self, obj):
+        return [student.username for student in obj.students.all()]
+    
+    def get_students_attendance(self, obj):
+        attendance_records = AttendanceRecord.objects.filter(class_instance=obj)
+        return [
+            {
+                "student_id": record.student.id,
+                "student_name": record.student.username,
+                "attended": record.attended
+            }
+            for record in attendance_records
+        ]
+    
+class AttendanceRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceRecord
         fields = '__all__'
@@ -53,6 +79,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['groups'] = list(user.groups.values_list('name', flat=True))
         token['is_staff'] = user.is_staff
         token['is_active'] = user.is_active
+        token['is_superuser'] = user.is_superuser
 
         return token
 

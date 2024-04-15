@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import University, Course, Class, AttendanceRecord
+from .models import Course, Class, AttendanceRecord, QRCodes
 from django import forms
 from django.contrib.auth.models import User
 
@@ -23,6 +23,7 @@ class ClassAdmin(admin.ModelAdmin):
         attendance_count = AttendanceRecord.objects.filter(class_instance=obj, attended=True).count()
         students_count = obj.students.count()
         return "{} / {}".format(attendance_count, students_count)
+    
     students_attendance.short_description = 'Students Attended'
 
 @admin.register(Course)
@@ -31,13 +32,13 @@ class CourseAdmin(admin.ModelAdmin):
     list_filter = ('university',)
     search_fields = ('name', 'code')
 
-@admin.register(University)
-class UniversityAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
-
 @admin.register(AttendanceRecord)
 class AttendanceRecordAdmin(admin.ModelAdmin):
     list_display = ('student', 'class_instance', 'date', 'attended')
     list_filter = ('class_instance', 'attended')
     search_fields = ('student__username', 'class_instance__course__name')
+
+@admin.register(QRCodes)
+class QRCodesAdmin(admin.ModelAdmin):
+    list_display = ('class_instance', 'qr_code_url')
+    search_fields = ('class_instance__course__name',)
