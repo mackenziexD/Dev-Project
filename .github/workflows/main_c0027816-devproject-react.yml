@@ -32,7 +32,7 @@ jobs:
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
         with:
-          name: nextjs-app
+          name: node-app
           path: ./frontend/.next
 
   deploy:
@@ -46,12 +46,13 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: nextjs-app
+          name: node-app
       
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
-          app-name: 'c0027816-devproject-django'
+          app-name: 'c0027816-devproject-react'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_05DD5E63BDD24898B0D76B365E3487D6 }}
+          package: .
