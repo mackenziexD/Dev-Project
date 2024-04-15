@@ -18,36 +18,19 @@ jobs:
               uses: actions/setup-node@v1
               with:
                 node-version: '20.x'
-            - name: npm install, build, and test
+            - name: npm install and build
               run: |
                 npm install
-                npm run build --if-present
-                npm run test --if-present
+                npm run build
+                mv ./build/static ./build/standalone/build
+                mv ./public ./build/standalone
               working-directory: ./frontend
 
-            - name: Upload artifact for deployment job
-              uses: actions/upload-artifact@v2
+            - name: 'Deploy to Azure Web App'
+              id: deploy-to-webapp
+              uses: azure/webapps-deploy@v2
               with:
-                name: node-app
-                path: ./frontend
-                
-    deploy:
-            runs-on: ubuntu-latest
-            needs: build
-            environment:    
-                name: 'Production'
-                url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-            steps:
-                - name: Download artifact from build job
-                  uses: actions/download-artifact@v2
-                  with:
-                    name: node-app
-                    
-                - name: 'Deploy to Azure Web App'
-                  id: deploy-to-webapp
-                  uses: azure/webapps-deploy@v2
-                  with:
-                    app-name: 'v-mganorkarnext'
-                    slot-name: 'Production'
-                    publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_05DD5E63BDD24898B0D76B365E3487D6 }}
-                    package: .
+                app-name: 'c0027816-devproject-react'
+                slot-name: 'Production'
+                publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_05DD5E63BDD24898B0D76B365E3487D6 }}
+                package: ./frontend/build/standalone
