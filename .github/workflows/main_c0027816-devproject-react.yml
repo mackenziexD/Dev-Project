@@ -31,10 +31,9 @@ jobs:
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
-        working-directory: ./frontend
         with:
           name: nextjs-app
-          path: .
+          path: ./frontend/.next
 
   deploy:
     runs-on: ubuntu-latest
