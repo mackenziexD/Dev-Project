@@ -16,6 +16,29 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+        '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'logfile': {
+        'class': 'logging.handlers.WatchedFileHandler',
+        'filename': 'D:\home\site\wwwroot\attendance.log'
+        }
+    },
+    'loggers': {
+        'django': {
+        'handlers': ['logfile'],
+        'level': 'ERROR',
+        'propagate': False,
+        }
+    }
+}
+
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'c0027816-devproject-django.azurewebsites.net']
 
 # JWT/API
