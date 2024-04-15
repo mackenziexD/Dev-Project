@@ -19,7 +19,7 @@ jobs:
           python-version: '3.11'
 
       - name: Change to backend directory
-        run: cd backend
+        run: cd ./backend
 
       - name: Create and start virtual environment
         run: |
