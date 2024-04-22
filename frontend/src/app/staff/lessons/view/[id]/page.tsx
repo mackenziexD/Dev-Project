@@ -50,7 +50,11 @@ export default function LessonEdit() {
 
   const { data: lesson, error } = useSWR(`/classes/${params.id}`, fetcher);
 
-  const markUserAttended = async (studentId) => {
+  const showQRCode = async (url: string) => {
+      window.open(url, "_blank");
+  }
+
+  const markUserAttended = async (studentId: number) => {
     try {
       await putter(`/attendancerecords/${studentId}/`, {attended: true, student: studentId, class_instance: params.id});
       mutate(`/classes/${params.id}`);
@@ -72,6 +76,10 @@ export default function LessonEdit() {
       <div className="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72 h-auto">
             <h1 className="text-2xl font-bold dark:text-white text-black">
                 View Lesson #{params.id}
+                
+                <button type="button" onClick={() => showQRCode(lesson?.qrCodeURL)} className="float-end py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                  View QR Code
+                </button>
             </h1>
 
             <div className="grid grid-cols-2 gap-4 mb-4">
