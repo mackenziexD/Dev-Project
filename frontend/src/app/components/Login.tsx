@@ -33,6 +33,7 @@ const Login = () => {
         router.push(destination.toString()); // Ensure destination is a string
       })
       .catch((err) => {
+        console.error(err);
         setError("root", { type: "manual", message: err.json.detail });
       });
   };
