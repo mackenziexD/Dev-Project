@@ -238,4 +238,4 @@ EMAIL_USE_SSL = False
 EMAIL_HOST_USER = os.getenv('EMAIL_ADDRESS')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
-NEXT_FRONT_END_URL = 'http://localhost:3000'
+NEXT_FRONT_END_URL = 'https://c0027816-devproject-react.azurewebsites.net'
