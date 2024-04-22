@@ -50,6 +50,12 @@ export default function LessonEdit() {
 
   const { data: lesson, error } = useSWR(`/classes/${params.id}`, fetcher);
 
+  useEffect(() => {
+    if(lesson){
+      console.log(lesson);
+    }
+  }, [lesson]);
+
   const showQRCode = async (url: string) => {
       window.open(url, "_blank");
   }
@@ -77,7 +83,7 @@ export default function LessonEdit() {
             <h1 className="text-2xl font-bold dark:text-white text-black">
                 View Lesson #{params.id}
                 
-                <button type="button" onClick={() => showQRCode(lesson?.qrCodeURL)} className="float-end py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                <button type="button" onClick={() => showQRCode(lesson?.qr_code_url)} className="float-end py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
                   View QR Code
                 </button>
             </h1>

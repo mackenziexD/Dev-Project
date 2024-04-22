@@ -4,6 +4,9 @@ from .models import Course, Class, AttendanceRecord, QRCodes
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.core.exceptions import ObjectDoesNotExist
+import logging
+
+logger = logging.getLogger(__name__)
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     groups = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), many=True, required=False)
@@ -71,9 +74,13 @@ class ClassSerializer(serializers.ModelSerializer):
     def get_qr_code_url(self, obj):
         try:
             qr_code = QRCodes.objects.get(class_instance=obj)
-            return qr_code.url
+            return qr_code.qr_code_url
         except ObjectDoesNotExist:
-            return None  # Return None if no QR code is found
+            logger.error(f"QR code not found for class instance {obj.id}")
+            return None
+        except Exception as e:
+            logger.error(f"Unexpected error when retrieving QR code for class {obj.id}: {str(e)}")
+            return None
     
 class AttendanceRecordSerializer(serializers.ModelSerializer):
     class Meta:
