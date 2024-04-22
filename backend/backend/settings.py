@@ -113,6 +113,11 @@ CORS_ALLOWED_ORIGINS = [
     "https://c0027816-devproject-react.azurewebsites.net",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080",
+    "https://c0027816-devproject-django.azurewebsites.net",
+]
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
