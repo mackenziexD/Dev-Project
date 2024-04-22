@@ -49,13 +49,12 @@ class ClassSerializer(serializers.ModelSerializer):
     teacher = serializers.StringRelatedField()
     course_name = serializers.CharField(source='course.name', read_only=True)
     students_attendance = serializers.SerializerMethodField()
-    qr_code_url = serializers.SerializerMethodField()
+    # qr_code_url = serializers.SerializerMethodField()
     
     class Meta:
         model = Class
         fields = ['id', 'course', 'course_name', 'teacher', 'students', 
-                  'students_names', 'university', 'schedule', 'students_attendance',
-                  'qr_code']
+                  'students_names', 'university', 'schedule', 'students_attendance']
 
     def get_students_names(self, obj):
         return [student.username for student in obj.students.all()]
