@@ -1,12 +1,8 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from .models import Course, Class, AttendanceRecord, QRCodes
+from .models import Course, Class, AttendanceRecord
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.core.exceptions import ObjectDoesNotExist
-import logging
-
-logger = logging.getLogger(__name__)
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     groups = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), many=True, required=False)
@@ -49,12 +45,10 @@ class ClassSerializer(serializers.ModelSerializer):
     teacher = serializers.StringRelatedField()
     course_name = serializers.CharField(source='course.name', read_only=True)
     students_attendance = serializers.SerializerMethodField()
-    # qr_code_url = serializers.SerializerMethodField()
     
     class Meta:
         model = Class
-        fields = ['id', 'course', 'course_name', 'teacher', 'students', 
-                  'students_names', 'university', 'schedule', 'students_attendance']
+        fields = ['id', 'course', 'course_name', 'teacher', 'students', 'students_names', 'university', 'schedule', 'students_attendance']
 
     def get_students_names(self, obj):
         return [student.username for student in obj.students.all()]
@@ -69,17 +63,6 @@ class ClassSerializer(serializers.ModelSerializer):
             }
             for record in attendance_records
         ]
-    
-    def get_qr_code_url(self, obj):
-        try:
-            qr_code = QRCodes.objects.get(class_instance=obj)
-            return qr_code.qr_code_url
-        except ObjectDoesNotExist:
-            logger.error(f"QR code not found for class instance {obj.id}")
-            return None
-        except Exception as e:
-            logger.error(f"Unexpected error when retrieving QR code for class {obj.id}: {str(e)}")
-            return None
     
 class AttendanceRecordSerializer(serializers.ModelSerializer):
     class Meta:
