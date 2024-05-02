@@ -29,13 +29,11 @@ class UserViewSet(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
     
     def create(self, request, *args, **kwargs):
-        print(request.data)
         # if theres no groups data passed in the request, set the group to the user's group
         if 'groups' not in request.data:
             request.data['groups'] = [request.user.groups.first().id]
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
-            print(serializer.errors) 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return super().create(request, *args, **kwargs)
     
@@ -111,10 +109,8 @@ class CourseViewSet(viewsets.ModelViewSet):
         return Course.objects.filter(university=user.groups.first()).order_by('-id')
     
     def create(self, request, *args, **kwargs):
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
-            print(serializer.errors) 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return super().create(request, *args, **kwargs)
 
@@ -136,12 +132,10 @@ class ClassViewSet(viewsets.ModelViewSet):
         return Class.objects.filter(university=user.groups.first()).order_by('schedule')
             
     def create(self, request, *args, **kwargs):
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         course = Course.objects.get(id=request.data.get('course'))
         request.data['university'] = course.university.id
         if not serializer.is_valid():
-            print(serializer.errors) 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return super().create(request, *args, **kwargs)
     
@@ -149,12 +143,10 @@ class ClassViewSet(viewsets.ModelViewSet):
             serializer.save(teacher=self.request.user)
 
     def update(self, request, *args, **kwargs):
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         course = Course.objects.get(id=request.data.get('course'))
         request.data['university'] = course.university.id
         if not serializer.is_valid():
-            print(serializer.errors) 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return super().update(request, *args, **kwargs)
     
@@ -207,10 +199,8 @@ class AttendanceRecordViewSet(viewsets.ModelViewSet):
             return AttendanceRecord.objects.filter(student=user).order_by('student__username')
         
     def update(self, request, *args, **kwargs):
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
-            print(serializer.errors) 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return super().update(request, *args, **kwargs)
 
