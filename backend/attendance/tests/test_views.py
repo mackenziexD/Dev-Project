@@ -18,4 +18,4 @@ class UserViewSetTestCase(APITestCase):
 
         self.client.force_authenticate(user=self.admin_user)
         response = self.client.get(reverse('user-detail', args=[self.admin_user.pk]))
-        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=f"Expected HTTP 201 Created, got {response.status_code}. Response data: {response.data}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=f"Expected HTTP 201 Created, got {response.status_code}. Response data: {response.data}" )
