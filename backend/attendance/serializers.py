@@ -35,9 +35,15 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
+        read_only_fields = ['university']
 
     def get_university_name(self, obj):
         return obj.university.name
+    
+    def update(self, instance, validated_data):
+        # ignore the university field on updates as we dont want to change it once created.
+        validated_data.pop('university', None)
+        return super().update(instance, validated_data)
 
 class ClassSerializer(serializers.ModelSerializer):
     students = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True)
