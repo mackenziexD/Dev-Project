@@ -223,5 +223,9 @@ class QRCodeView(APIView):
         qr_code = QRCodes.objects.filter(class_instance__id=class_id).first()
         if not qr_code:
             return Response({'message': 'QR Code not found'}, status=status.HTTP_404_NOT_FOUND)
+        
         serializer = QRCodeSerializer(qr_code)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
         return Response(serializer.data)
