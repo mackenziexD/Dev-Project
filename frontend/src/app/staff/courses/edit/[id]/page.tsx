@@ -23,9 +23,10 @@ export default function EditPage() {
     e.preventDefault();
     const form = new FormData(e.target);
     const name = form.get('name');
+    const code = form.get('code');
 
     try {
-      await putter(`/courses/${params.id}/`, { name });
+      await putter(`/courses/${params.id}/`, { name, code });
       mutate(`/courses/${params.id}`);
 
       toast.success(`Course has been edited!`, {

@@ -20,6 +20,7 @@ router.register(r'students', views.StudentsViewSet, basename='students')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('classes/<int:class_id>/qr_code', views.QRCodeView.as_view(), name='class-qr-code'),
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path("api/token/", views.CustomTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", jwt_views.TokenRefreshView.as_view(), name="token_refresh"),

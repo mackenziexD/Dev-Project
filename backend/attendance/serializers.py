@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from .models import Course, Class, AttendanceRecord
+from .models import Course, Class, AttendanceRecord, QRCodes
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -74,6 +74,12 @@ class AttendanceRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceRecord
         fields = '__all__'
+
+class QRCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QRCodes
+        fields = '__all__'
+        read_only_fields = ['class_instance', 'qr_code_url']
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod

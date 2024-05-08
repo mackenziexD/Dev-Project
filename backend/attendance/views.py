@@ -1,16 +1,17 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from attendance.serializers import UserSerializer, GroupSerializer, CourseSerializer, ClassSerializer, AttendanceRecordSerializer, CustomTokenObtainPairSerializer
-from attendance.models import Course, Class, AttendanceRecord
+from attendance.serializers import QRCodeSerializer, UserSerializer, GroupSerializer, CourseSerializer, ClassSerializer, AttendanceRecordSerializer, CustomTokenObtainPairSerializer
+from attendance.models import Course, Class, AttendanceRecord, QRCodes
 from rest_framework import status
 from django.utils import timezone
 
 class IsSuperUser(permissions.IsAdminUser):
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_superuser)
-
+    
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -113,6 +114,13 @@ class CourseViewSet(viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return super().create(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            print(serializer.errors) 
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return super().update(request, *args, **kwargs)
 
 class ClassViewSet(viewsets.ModelViewSet):
     """
@@ -206,3 +214,14 @@ class AttendanceRecordViewSet(viewsets.ModelViewSet):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
         serializer_class = CustomTokenObtainPairSerializer
+
+class QRCodeView(APIView):
+    """
+    API endpoint that returns the qr code url for a class.
+    """ 
+    def get(self, request, class_id):
+        qr_code = QRCodes.objects.filter(class_instance__id=class_id).first()
+        if not qr_code:
+            return Response({'message': 'QR Code not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = QRCodeSerializer(qr_code)
+        return Response(serializer.data)
