@@ -50,10 +50,10 @@ export default function EditPage() {
           <h1 className="text-2xl font-bold dark:text-white text-black">
             Edit Course: {course?.name}
           </h1>
-          <Link href="/admin/user-groups" 
+          <Link href="/staff/courses" 
           className="py-2 px-3 mt-2 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
             <FontAwesomeIcon icon="chevron-left" className='flex-shrink-0' style={{width: "1rem", height: "1rem"}} />
-            Back to Groups List
+            Back to Course List
           </Link>
 
           <div className="mt-4 flex flex-col dark:bg-gray-800 dark:text-gray-200 text-gray-600 bg-white ">

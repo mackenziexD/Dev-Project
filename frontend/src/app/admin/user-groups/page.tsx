@@ -13,6 +13,7 @@ export default function allGroups() {
     const [noMorePages, setNoMorePages] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [selectedGroupId, setSelectedGroupId] = useState(null);
+    
     const { data: groups, error } = useSWR(`/groups?page=${currentPage}`, fetcher);
 
     // Toggle modal and set the selected group ID

@@ -1,7 +1,9 @@
 import wretch, { Wretch, WretchError } from "wretch";
 import { AuthActions } from "@/app/auth/utils";
 
-// Extract necessary functions from the AuthActions utility.
+/**
+ * Extract necessary functions from the AuthActions utility.
+ */
 const { handleJWTRefresh, storeToken, getToken } = AuthActions();
 
 /**
@@ -9,7 +11,7 @@ const { handleJWTRefresh, storeToken, getToken } = AuthActions();
  */
 const api = () => {
   return (
-    wretch("https://c0027816-devproject-django.azurewebsites.net/")
+    wretch("http://127.0.0.1:8000/")
       // Initialize authentication with the access token.
       .auth(`Bearer ${getToken("access")}`)
       // Catch 401 errors to refresh the token and retry the request.

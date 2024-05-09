@@ -64,15 +64,7 @@ export default function Home() {
                 </div>
         
             
-                <div className="overflow-hidden shadow-md">
-                    <div className="px-6 py-4 dark:bg-gray-800 dark:border-gray-600 bg-white border-b dark:text-gray-100 text-gray-700 text-black border-gray-200 font-bold uppercase">
-                        Last 10 Attended Lessons
-                    </div>
-
-                    <div className="p-6 dark:bg-gray-800 dark:text-gray-200 text-gray-600 bg-white border-b border-gray-600">
-                        
-                    </div>
-                </div>
+                
 
             </div>
 
